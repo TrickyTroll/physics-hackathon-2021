@@ -1,0 +1,19 @@
+.circle {
+  margin: 4px;
+  display: inline-block;
+  top: -10px;
+  left: -10px;
+  opacity: 0.6;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.circle.blue {
+  fill: blue;
+  stroke: blue;
+}
+
+#box {
+  stroke: black;
+}

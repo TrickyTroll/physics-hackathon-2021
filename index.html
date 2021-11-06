@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+        <link rel="stylesheet" href="css/animation.css"/>
+        <link rel="stylesheet" href="css/styles.css"/>
+	</head>
+	<body>
+        <article>
+        <div id="container">
+            <h1 id="nom-projet">This is our title</h1>
+            <section>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. In amet temporibus omnis delectus error quis minima quia earum alias dignissimos? Molestias dolorem ipsam dicta illum quis doloremque magnam unde incidunt.</p>
+            </section>
+            <h2 id="demo">Time for a demo!</h2>
+            <p class="subtitle">Choices...so many choices!</p>
+
+            <div id="theta-selector">
+                <p>Theta (in radians)</p>
+                <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
+                <output>0</output>
+            </div>
+
+            <div id="phi-selector">
+                <p>Phi (also in radians)</p>
+                <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
+                <output>0</output>
+            </div>
+
+            <canvas id="electronCanvas" width="400" height="400"></canvas>
+        </div>
+
+            <p class="subtitle">Results</p>
+
+            <div class="results-form" style="padding: 20px ">
+
+                <div class="first-box-form box-form" style="width: 33%; float:left;">
+                    <div id="box-1-theta-selector">
+                        <p>Theta of the first box (in radians)</p>
+                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+
+                    <div id="box-1-phi-selector">
+                        <p>Phi of the first box (also in radians)</p>
+                        <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+                </div>
+
+                <div class="second-box-form box-form" style="width: 33%; float:left;">
+                    <div id="box-2-theta-selector">
+                        <p>Theta of the second box (in radians)</p>
+                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+
+                    <div id="box-2-phi-selector">
+                        <p>Phi of the second box (also in radians)</p>
+                        <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+                </div>
+
+                <div class="third-box-form box-form" style="width: 33%; float:left;">
+                    <div id="box-3-theta-selector">
+                        <p>Theta of the third box (in radians)</p>
+                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+
+                    <div id="box-3-phi-selector">
+                        <p>Phi of the third box (also in radians)</p>
+                        <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="anime-demo">
+                <svg width="600" height="400">
+                    <title>Title</title>
+                    <g>
+                        <rect id="box" x="100" y="200" width="50" height="50"/>
+                        <text x="105" y="225" font-family="Verdana" font-size="20" fill="white">1</text>
+                    </g>
+                    <g>
+                        <rect id="box" x="300" y="300" width="50" height="50"/>
+                        <text x="305" y="325" font-family="Verdana" font-size="20" fill="white">3</text>
+                    </g>
+                    <g>
+                        <rect id="box" x="300" y="100" width="50" height="50"/>
+                        <text x="305" y="125" font-family="Verdana" font-size="20" fill="white">2</text>
+                    </g>
+                    <circle cx="0" cy="225" r="15" class="circle blue">
+                    <animateMotion
+                        path="M 0 0 H 300 Z"
+                        dur="3s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </div>
+
+            <script src="js/utils.js"></script> 
+            <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+            <script>
+                async function main(){
+                    let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+                    // Pyodide is now ready to use...
+                    let pythonScript = ""
+                    await fetch('toto.py')
+                        .then(response => response.text())
+                        .then(data => pythonScript = data);
+                    console.log(await pyodide.runPython(pythonScript));
+                }
+                main();
+            </script>
+            <!-- Animation -->
+            <script>
+                class Box {
+                    // id is and id from 1 to 3 (what is shown in the html)
+                    // coordinates is something returned by getBoxCoordinates
+                    // phi is the phi angle of the magnetic field
+                    // theta is the angle of the magnetic field
+                    // representation is the document representation
+                    constructor(id, coordinates, phi, theta, representation) {
+                        this.id = id;
+                        this.coordinates = coordinates;
+                        this.phi = phi;
+                        this.theta = theta;
+                        this.representation = representation;
+                    }
+                }
+                // pass one of the boxes to get coordinates
+                // returnValue.x is the x coordinate
+                function getBoxCoordinates(box) {
+                    return {x: box.x.baseVal.value, y: box.y.baseVal.value}
+                }
+
+                const firstBox = document.querySelector("#anime-demo").children[0].children[1].children[0];
+                const thirdBox = document.querySelector("#anime-demo").children[0].children[2].children[0];
+                const secondBox = document.querySelector("#anime-demo").children[0].children[3].children[0];
+
+                let boxOne = new Box(1, getBoxCoordinates(firstBox), 0, 0, firstBox)
+                let boxTwo = new Box(2, getBoxCoordinates(secondBox), 0, 0, secondBox)
+                let boxThree = new Box(3, getBoxCoordinates(thirdBox), 0, 0, thirdBox)
+
+                const firstBoxThetaSelector = document.querySelector("#box-1-theta-selector").children[1];
+                const firstBoxPhiSelector = document.querySelector("#box-1-phi-selector").children[1];
+                firstBoxThetaSelector.addEventListener("input", () => {
+                    boxOne.theta = firstBoxThetaSelector.value * Math.PI;
+                });
+                firstBoxPhiSelector.addEventListener("input", () => {
+                    boxOne.phi = firstBoxPhiSelector.value * Math.PI;
+                });
+
+                const secondBoxThetaSelector = document.querySelector("#box-2-theta-selector").children[1];
+                const secondBoxPhiSelector = document.querySelector("#box-2-phi-selector").children[1];
+                secondBoxThetaSelector.addEventListener("input", () => {
+                    boxTwo.theta = secondBoxThetaSelector.value * Math.PI;
+                });
+                secondBoxPhiSelector.addEventListener("input", () => {
+                    boxTwo.phi = secondBoxPhiSelector.value * Math.PI;
+                });
+
+                const thirdBoxThetaSelector = document.querySelector("#box-3-theta-selector").children[1];
+                const thirdBoxPhiSelector = document.querySelector("#box-3-phi-selector").children[1];
+                thirdBoxThetaSelector.addEventListener("input", () => {
+                    boxThree.theta = thirdBoxThetaSelector.value * Math.PI;
+                });
+                thirdBoxPhiSelector.addEventListener("input", () => {
+                    boxThree.phi = thirdBoxPhiSelector.value * Math.PI;
+                });
+
+            </script>
+            <!-- Sphere selector -->
+            <script type="module">
+                import { OrbitControls } from "./three.js/examples/jsm/controls/OrbitControls.js";
+                let phi = 0;
+                let theta = 0;
+                let thetaSelector = document.getElementById("theta-selector").children[1];
+                let phiSelector = document.getElementById("phi-selector").children[1];
+
+                thetaSelector.addEventListener("input", updateTheta);
+                phiSelector.addEventListener("input", updatePhi);
+
+
+                var scene = new THREE.Scene();
+                var camera = new THREE.PerspectiveCamera(50, 500 / 400, 0.1, 1000);
+
+                var renderer = new THREE.WebGLRenderer( { canvas: electronCanvas } );
+                renderer.setSize(500, 400);
+                document.body.appendChild(renderer.domElement);
+
+                const controls = new OrbitControls( camera, renderer.domElement );
+                camera.position.z = 15;
+                camera.position.x = 1;
+                camera.position.y = .5;
+                controls.update();
+
+                // Draw x, y, z axis
+                const axesHelper = new THREE.AxesHelper( 5 );
+                scene.add( axesHelper );
+
+                // Shpere of radius 3, 50 segments of height 50. 
+                // phi starts at 2pi.
+                // Theta starts at 0.
+                // theta ends at 2 pi
+                var geometry = new THREE.SphereGeometry(3, 50, 50, 0, Math.PI * 2, 0, Math.PI * 2);
+                var material = new THREE.MeshBasicMaterial( { color: 0x039dfc, wireframe: true } );
+                var sphere = new THREE.Mesh(geometry, material);
+                scene.add(sphere);
+
+
+                // to_update 
+                let dir = new THREE.Vector3( computeX(1, phi, theta), computeY(1, phi, theta), computeZ(1, phi, theta) );
+                dir.normalize();
+
+                const origin = new THREE.Vector3( 0, 0, 0 );
+                const length = 4;
+                const hex = 0xffff00;
+
+                let arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+
+                function updateArrowHelper() {
+                    dir.x = computeX(4, phi, theta);
+                    dir.y = computeY(4, phi, theta);
+                    dir.z = computeZ(4, phi);
+                    // Debugging:
+                    // console.log(dir);
+                    arrowHelper.setDirection(dir.normalize());
+                }
+
+                // Get the angle seleced by the user in radians.
+                function updateTheta() {
+                    theta = thetaSelector.value * Math.PI;
+                    updateArrowHelper();
+                }
+
+                // Get the angle seleced by the user in radians.
+                function updatePhi() {
+                    phi = phiSelector.value * Math.PI;
+                    updateArrowHelper();
+                }
+                
+                scene.add( arrowHelper );
+
+                camera.position.z = 10;
+                var render = function () {
+                    requestAnimationFrame(render);
+
+                    // sphere.rotation.z += 0.01;
+                    // arrowHelper.rotation.y += 0.01;
+                    // axesHelper.rotation.y += 0.01;
+
+                    controls.update();
+                    renderer.render(scene, camera);
+                };
+
+                render();
+            </script>
+            <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+            <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        </article>
+        </body>
+    </html>
