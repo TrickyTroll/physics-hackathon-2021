@@ -56,12 +56,12 @@
             </script>
             <script>
                 x=document.querySelector("#toto")
-                x.addEventListener("click", async ()=>{main()})
+                x.addEventListener("click", async ()=>{await main()})
 
-                function main(){
+                async function main(){
                         let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
                         // Pyodide is now ready to use...
-                        let pythonScript = ""
+                        let pythonScript = "";
                         await fetch('main.py')
                             .then(response => response.text())
                             .then(data => pythonScript = data);
