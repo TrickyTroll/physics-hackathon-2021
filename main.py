@@ -110,5 +110,3 @@ def build_json(spinor=(1,0)):
     json_string = json.dumps(d)
     print(json_string)
     return json_string
-
-json_string = build_json()
