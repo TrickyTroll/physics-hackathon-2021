@@ -2,253 +2,50 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Quantic Odds</title>
+		<title>Quantum Odds</title>
         <link rel="stylesheet" href="css/animation.css"/>
         <link rel="stylesheet" href="css/styles.css"/>
+        <link rel="stylesheet" href="css/tufte.css"/>
         <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
         <link type="text/css" rel="stylesheet" href="force/force.css"/>
 	</head>
 	<body>
         <article>
         <div id="container">
-            <h1 id="nom-projet">This is our title</h1>
+            <h1 id="nom-projet">Quantum odds</h1>
             <section>
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. In amet temporibus omnis delectus error quis minima quia earum alias dignissimos? Molestias dolorem ipsam dicta illum quis doloremque magnam unde incidunt.</p>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. In amet temporibus omnis delectus error quis minima quia earum alias dignissimos? Molestias dolorem ipsam dicta illum quis doloremque magnam unde incidunt.
+                \( \int \frac{\phi}{\sin\theta} \equiv \mathrm{\delta}\)
+                </p>
             </section>
-            <h2 id="demo">Time for a demo!</h2>
-            <p class="subtitle">Choices...so many choices!</p>
 
-            <div id="theta-selector">
-                <p>Theta (in radians)</p>
-                <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
-                <output>0</output>
-            </div>
+            <div class="container_side_to_side">
+                <div id="st-box">
+                    <h2 id="demo">Time for a demo!</h2>
+                    <p class="subtitle">Choices...so many choices!</p>
 
-            <div id="phi-selector">
-                <p>Phi (also in radians)</p>
-                <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
-                <output>0</output>
-            </div>
-
-            <div id="electron" width="400" height="400"></div>
-        
-        
-        
-        </div>     
-
-            <p class="subtitle">Results</p>
-            <button id="toto" style="background-color: black;"></button>
-
-            <!--- <div class="results-form" style="padding: 20px ">
-
-                <div class="first-box-form box-form" style="width: 33%; float:left;">
-                    <div id="box-1-theta-selector">
-                        <p>Theta of the first box (in radians)</p>
-                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
-                        <output>0</output>
-                    </div>
-
-                    <div id="box-1-phi-selector">
-                        <p>Phi of the first box (also in radians)</p>
+                    <div id="theta-selector">
+                        <label>\( \theta \) [rad]</label>
                         <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
                         <output>0</output>
                     </div>
+
+                    <div id="phi-selector">
+                        <label>\( \phi \) [rad]</label>
+                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
+                        <output>0</output>
+                    </div>
+                    <button id="toto" style="background-color: grey;">Build graph</button>
                 </div>
-
-                <div class="second-box-form box-form" style="width: 33%; float:left;">
-                    <div id="box-2-theta-selector">
-                        <p>Theta of the second box (in radians)</p>
-                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
-                        <output>0</output>
-                    </div>
-
-                    <div id="box-2-phi-selector">
-                        <p>Phi of the second box (also in radians)</p>
-                        <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
-                        <output>0</output>
-                    </div>
+                <div id="rd-box">
+                    <div id="electron" width="400" height="400"></div>
                 </div>
-
-                <div class="third-box-form box-form" style="width: 33%; float:left;">
-                    <div id="box-3-theta-selector">
-                        <p>Theta of the third box (in radians)</p>
-                        <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
-                        <output>0</output>
-                    </div>
-
-                    <div id="box-3-phi-selector">
-                        <p>Phi of the third box (also in radians)</p>
-                        <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
-                        <output>0</output>
-                    </div>
-                </div> --->
-
-            </div> 
-
-            <!--- <div id="anime-demo">
-                <svg width="600" height="400">
-                    <title>Title</title>
-                    <g>
-                        <rect id="box" x="100" y="200" width="50" height="50"/>
-                        <text x="105" y="225" font-family="Verdana" font-size="20" fill="white">1</text>
-                    </g>
-                    <g>
-                        <rect id="box" x="300" y="300" width="50" height="50"/>
-                        <text x="305" y="325" font-family="Verdana" font-size="20" fill="white">3</text>
-                    </g>
-                    <g>
-                        <rect id="box" x="300" y="100" width="50" height="50"/>
-                        <text x="305" y="125" font-family="Verdana" font-size="20" fill="white">2</text>
-                    </g>
-                    <circle cx="0" cy="225" r="15" class="circle blue">
-                    <animateMotion
-                        path="M 0 0 H 300 Z"
-                        dur="3s" repeatCount="indefinite" />
-                    </circle>
-                </svg>
-            </div> --->
 
             <div id="digraph">
                 <svg width="960" height="600"></svg>
             </div>
             
             <script type="text/javascript" src="force/force.js"></script>
-            <!---<script src="https://d3js.org/d3.v7.min.js"></script>--->
-            <!--- <script>
-                var svg = d3.select("svg"),
-                    width = +svg.attr("width"),
-                    height = +svg.attr("height");
-                
-                var color = d3.scaleOrdinal(d3.schemeAccent);
-                
-                var simulation = d3.forceSimulation()
-                    .force("link", d3.forceLink().id(function(d) { return d.id; }))
-                    .force("charge", d3.forceManyBody())
-                    .force("center", d3.forceCenter(width / 2, height / 2));
-
-                d3.json("miserables.json").then(function(graph) {
-                    
-                  var link = svg.append("g")
-                      .attr("class", "links")
-                    .selectAll("line")
-                    .data(graph.links)
-                    .enter().append("line")
-                      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
-                
-                  var node = svg.append("g")
-                      .attr("class", "nodes")
-                    .selectAll("g")
-                    .data(graph.nodes)
-                    .enter().append("g")
-                
-                  var circles = node.append("circle")
-                    .attr("r", 5)
-                    .attr("fill", function(d) { return color(d.group); });
-                  
-                  var lables = node.append("text")
-                      .text(function(d) {
-                        return d.id;
-                      })
-                      .attr('x', 6)
-                      .attr('y', 3);
-                
-                  node.append("title")
-                      .text(function(d) { return d.id; });
-                
-                  simulation
-                      .nodes(graph.nodes)
-                      .on("tick", ticked);
-                
-                  simulation.force("link")
-                      .links(graph.links);
-                
-                  function ticked() {
-                    link
-                        .attr("x1", function(d) { return d.source.x; })
-                        .attr("y1", function(d) { return d.source.y; })
-                        .attr("x2", function(d) { return d.target.x; })
-                        .attr("y2", function(d) { return d.target.y; });
-                
-                    node
-                        .attr("transform", function(d) {
-                          return "translate(" + d.x + "," + d.y + ")";
-                        })
-                  }
-                });
-                
-            </script>--->
-            <!--- https://ipython-books.github.io/64-visualizing-a-networkx-graph-in-the-notebook-with-d3js/ --->
-            <!--- <script>
-                var width = 300, height = 300;
-
-                // We create a color scale.
-                //var color = d3.scaleOrdinal(d3.schemeCategory10).range();
-
-                // We create a force-directed dynamic graph layout.
-                var force = d3.forceSimulation()
-                              //.charge(-120)
-                              //.linkDistance(30)
-                              //.size([width, height]);
-
-                // In the <div> element, we create a <svg> graphic
-                // that will contain our interactive visualization.
-                var svg = d3.select("#digraph").select("svg")
-                if (svg.empty()) {
-                    svg = d3.select("#digraph").append("svg")
-                            .attr("width", width)
-                            .attr("height", height);
-                }
-
-                // We load the JSON file.
-                d3.json("graph.json").then(function(graph){ 
-                    // In this block, the file has been loaded
-                    // and the 'graph' object contains our graph.
-
-                    // We load the nodes and links in the
-                    // force-directed graph.
-                    force.nodes(graph.nodes)
-                         //.links(graph.links)
-                         .on();
-
-                    // We create a <line> SVG element for each link
-                    // in the graph.
-                    var link = svg.selectAll(".link")
-                                .data(graph.links)
-                                .enter().append("line")
-                                .attr("class", "link");
-
-                    // We create a <circle> SVG element for each node
-                    // in the graph, and we specify a few attributes.
-                    var node = svg.selectAll(".node")
-                                  .data(graph.nodes)
-                                  .enter().append("circle")
-                                  .attr("class", "node")
-                                  .attr("r", 5)  // radius
-                                  .style("fill", "red")
-                                  .call(force.drag);
-
-                    // The name of each node is the node number.
-                    node.append("title")
-                        .text(function(d) { return d.name; });
-
-                    // We bind the positions of the SVG elements
-                    // to the positions of the dynamic force-directed
-                    // graph, at each time step.
-                    force.on("tick", function() {
-                    link.attr("x1", function(d){return d.source.x})
-                        .attr("y1", function(d){return d.source.y})
-                        .attr("x2", function(d){return d.target.x})
-                        .attr("y2", function(d){return d.target.y});
-
-                    node.attr("cx", function(d){return d.x})
-                        .attr("cy", function(d){return d.y});
-
-                    console.log("Je me suis rendu jusqu'ici");
-                });
-                });
-
-            </script> --->
-
             <script src="js/utils.js"></script> 
             <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -256,6 +53,15 @@
                 function input_fixed(text) {
                     return prompt(text);
                 };
+            </script>
+            <script>
+                x=document.querySelector("#toto")
+                x.addEventListener("click", async ()=>{await combine()})
+
+                async function combine(){
+                    await main()
+                    display_graph()
+                }
             </script>
             <script>
                 async function main(){
@@ -267,8 +73,6 @@
                         .then(data => pythonScript = data);
                     console.log(await pyodide.runPython(pythonScript));
                 }
-                x=document.querySelector("#toto")
-                x.addEventListener("click", async ()=>{await main()})
             </script>
             <!-- Animation -->
             <script>
