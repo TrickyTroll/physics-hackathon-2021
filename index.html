@@ -5,6 +5,8 @@
 		<title>Quantic Odds</title>
         <link rel="stylesheet" href="css/animation.css"/>
         <link rel="stylesheet" href="css/styles.css"/>
+        <script type="text/javascript" src="https://d3js.org/d3.v4.min.js"></script>
+        <link type="text/css" rel="stylesheet" href="force/force.css"/>
 	</head>
 	<body>
         <article>
@@ -29,12 +31,15 @@
             </div>
 
             <div id="electron" width="400" height="400"></div>
+        
+        
+        
         </div>     
 
             <p class="subtitle">Results</p>
             <button id="toto" style="background-color: black;"></button>
 
-            <div class="results-form" style="padding: 20px ">
+            <!--- <div class="results-form" style="padding: 20px ">
 
                 <div class="first-box-form box-form" style="width: 33%; float:left;">
                     <div id="box-1-theta-selector">
@@ -76,11 +81,11 @@
                         <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
                         <output>0</output>
                     </div>
-                </div>
+                </div> --->
 
-            </div>
+            </div> 
 
-            <div id="anime-demo">
+            <!--- <div id="anime-demo">
                 <svg width="600" height="400">
                     <title>Title</title>
                     <g>
@@ -101,15 +106,15 @@
                         dur="3s" repeatCount="indefinite" />
                     </circle>
                 </svg>
-            </div>
+            </div> --->
 
             <div id="digraph">
                 <svg width="960" height="600"></svg>
             </div>
             
-
-            <script src="https://d3js.org/d3.v7.min.js"></script>
-            <script>
+            <script type="text/javascript" src="force/force.js"></script>
+            <!---<script src="https://d3js.org/d3.v7.min.js"></script>--->
+            <!--- <script>
                 var svg = d3.select("svg"),
                     width = +svg.attr("width"),
                     height = +svg.attr("height");
@@ -121,9 +126,8 @@
                     .force("charge", d3.forceManyBody())
                     .force("center", d3.forceCenter(width / 2, height / 2));
 
-                d3.json("miserables.json").then(function(error, graph) {
-                  if (error) throw error;
-                
+                d3.json("miserables.json").then(function(graph) {
+                    
                   var link = svg.append("g")
                       .attr("class", "links")
                     .selectAll("line")
@@ -140,14 +144,6 @@
                   var circles = node.append("circle")
                     .attr("r", 5)
                     .attr("fill", function(d) { return color(d.group); });
-                
-                  // Create a drag handler and append it to the node object instead
-                  var drag_handler = d3.drag()
-                      .on("start", dragstarted)
-                      .on("drag", dragged)
-                      .on("end", dragended);
-                
-                  drag_handler(node);
                   
                   var lables = node.append("text")
                       .text(function(d) {
@@ -180,24 +176,7 @@
                   }
                 });
                 
-                function dragstarted(d) {
-                  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
-                  d.fx = d.x;
-                  d.fy = d.y;
-                }
-                
-                function dragged(d) {
-                  d.fx = d3.event.x;
-                  d.fy = d3.event.y;
-                }
-                
-                function dragended(d) {
-                  if (!d3.event.active) simulation.alphaTarget(0);
-                  d.fx = null;
-                  d.fy = null;
-                }
-                
-            </script>
+            </script>--->
             <!--- https://ipython-books.github.io/64-visualizing-a-networkx-graph-in-the-notebook-with-d3js/ --->
             <!--- <script>
                 var width = 300, height = 300;

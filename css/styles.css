@@ -20,7 +20,7 @@ digraph.node {
 } 
   
 digraph.link {
-    stroke: #999; 
+    stroke: #333; 
     stroke-opacity: .6;
 }
 
