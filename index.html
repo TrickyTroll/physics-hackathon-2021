@@ -26,8 +26,8 @@
 
             <div class="container_side_to_side">
                 <div id="st-box">
-                    <h2 id="demo">Choose the spinor orientation!</h2>
-                    <p class="subtitle">Use the sliders to orientate the spinor.</p>
+                    <h2 id="demo">Choose the orientation.</h2>
+                    <p class="subtitle">Use the sliders!</p>
 
                     <div id="theta-selector">
                         <label>\( \theta \) [rad]</label>
@@ -60,41 +60,24 @@
                 };
             </script>
             <script>
-                let pyodide = "";
-                let pythonScript = "";
-                let canPress = false;
+                x=document.querySelector("#toto")
+                x.addEventListener("click", async ()=>{await main()})
 
                 async function main(){
-                    pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
-                    // Pyodide is now ready to use...
-                    await fetch('main.py')
-                        .then(response => response.text())
-                        .then(data => pythonScript = data);
-                    //console.log(await pyodide.runPythonAsync(pythonScript));
-                    await pyodide.loadPackage(['numpy', 'networkx']);
-                    canPress = true;
-                }
-
-                // blocking call
-                window.onload = async function () {
-                    await main();
-                };
-
-                async function buildGraph() {
-                    // pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
-                    if (canPress) {
+                        let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+                        // Pyodide is now ready to use...
+                        let pythonScript = "";
+                        await fetch('main.py')
+                            .then(response => response.text())
+                            .then(data => pythonScript = data);
+                        //console.log(await pyodide.runPythonAsync(pythonScript));
+                        await pyodide.loadPackage(['numpy', 'networkx']);
                         await pyodide.runPython(pythonScript);
                         let jsonFile = pyodide.globals.get("json_string");
-                        let theta = pyodide.globals.get("theta");
                         console.log(jsonFile);
-                        console.log(theta);
+
                         await display_graph(jsonFile);
-                    }
                 }
-
-                x=document.querySelector("#toto");
-                x.addEventListener("click", async ()=>{await buildGraph()});
-
             </script>
             <!-- Animation -->
             <script>
