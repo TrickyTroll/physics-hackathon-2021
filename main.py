@@ -114,4 +114,4 @@ def build_json(spinor=(1,0)):
 
 theta = float(js.document.querySelector("#theta-selector").children[1].value) * np.pi
 phi = float(js.document.querySelector("#phi-selector").children[1].value) * np.pi
-json_body = build_json(spinor(theta, phi))
+json_string = build_json(spinor(theta, phi))
