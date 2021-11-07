@@ -2,6 +2,7 @@
   margin: auto;
   width: 50%;
   padding: 10px;
+  background: transparent;
 }
 
 canvas {
@@ -11,4 +12,14 @@ canvas {
     margin-right: auto;
     display: block;
     width: 800px;
+}
+
+digraph.node {
+    stroke: #fff; 
+    stroke-width: 1.5px;
+} 
+  
+digraph.link {
+    stroke: #999; 
+    stroke-opacity: .6;
 }

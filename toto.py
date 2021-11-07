@@ -1,4 +1,6 @@
-def foobar(x, y):
-    print(x + y)
+from js import input_fixed
+input = input_fixed
+__builtins__.input = input_fixed
 
-foobar(3, 1)
+x = input("Sa mere")
+print(f'{x} est nulle.')

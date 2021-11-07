@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>My first three.js app</title>
+		<title>Quantic Odds</title>
         <link rel="stylesheet" href="css/animation.css"/>
         <link rel="stylesheet" href="css/styles.css"/>
 	</head>
@@ -18,18 +18,18 @@
 
             <div id="theta-selector">
                 <p>Theta (in radians)</p>
-                <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
+                <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
                 <output>0</output>
             </div>
 
             <div id="phi-selector">
                 <p>Phi (also in radians)</p>
-                <input type="range" value="0" min="0" max="1" step=".1" oninput="this.nextElementSibling.value = this.value">
+                <input type="range" value="0" min="0" max="2" step=".1" oninput="this.nextElementSibling.value = this.value">
                 <output>0</output>
             </div>
 
-            <canvas id="electronCanvas" width="400" height="400"></canvas>
-        </div>
+            <div id="electron" width="400" height="400"></div>
+        </div>     
 
             <p class="subtitle">Results</p>
 
@@ -102,9 +102,88 @@
                 </svg>
             </div>
 
+            <div id="digraph"></div>
+
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+            <!--- https://ipython-books.github.io/64-visualizing-a-networkx-graph-in-the-notebook-with-d3js/ --->
+            <script>
+                var width = 300, height = 300;
+
+                // We create a color scale.
+                var color = d3.scaleOrdinal(d3.schemeCategory10).range();
+
+                // We create a force-directed dynamic graph layout.
+                var force = d3.forceSimulation()
+                              //.charge(-120)
+                              //.linkDistance(30)
+                              //.size([width, height]);
+
+                // In the <div> element, we create a <svg> graphic
+                // that will contain our interactive visualization.
+                var svg = d3.select("#digraph").select("svg")
+                if (svg.empty()) {
+                    svg = d3.select("#digraph").append("svg")
+                            .attr("width", width)
+                            .attr("height", height);
+                }
+
+                // We load the JSON file.
+                d3.json("graph.json", function(error, graph) {
+                    // In this block, the file has been loaded
+                    // and the 'graph' object contains our graph.
+
+                    // We load the nodes and links in the
+                    // force-directed graph.
+                    force.nodes(graph.nodes)
+                        .links(graph.links)
+                        .start();
+
+                    // We create a <line> SVG element for each link
+                    // in the graph.
+                    var link = svg.selectAll(".link")
+                                .data(graph.links)
+                                .enter().append("line")
+                                .attr("class", "link");
+
+                    // We create a <circle> SVG element for each node
+                    // in the graph, and we specify a few attributes.
+                    var node = svg.selectAll(".node")
+                                .data(graph.nodes)
+                                .enter().append("circle")
+                                .attr("class", "node")
+                                .attr("r", 5)  // radius
+                                .style("fill", function(d) {
+                                        // The node color depends on the club.
+                                        return color(d.club);
+                                    })
+                                .call(force.drag);
+
+                    // The name of each node is the node number.
+                    node.append("title")
+                        .text(function(d) { return d.name; });
+
+                    // We bind the positions of the SVG elements
+                    // to the positions of the dynamic force-directed
+                    // graph, at each time step.
+                    force.on("tick", function() {
+                    link.attr("x1", function(d){return d.source.x})
+                        .attr("y1", function(d){return d.source.y})
+                        .attr("x2", function(d){return d.target.x})
+                        .attr("y2", function(d){return d.target.y});
+
+                    node.attr("cx", function(d){return d.x})
+                        .attr("cy", function(d){return d.y});
+                })})
+            </script>
+
             <script src="js/utils.js"></script> 
             <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+            <script>
+                function input_fixed(text) {
+                    return prompt(text);
+                };
+            </script>
             <script>
                 async function main(){
                     let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
@@ -190,9 +269,15 @@
                 var scene = new THREE.Scene();
                 var camera = new THREE.PerspectiveCamera(50, 500 / 400, 0.1, 1000);
 
-                var renderer = new THREE.WebGLRenderer( { canvas: electronCanvas } );
+                var renderer = new THREE.WebGLRenderer( { alpha: true } );
                 renderer.setSize(500, 400);
                 document.body.appendChild(renderer.domElement);
+
+                renderer.setClearColor( 0x000000, 0 );
+                scene.background = null;
+
+                var container = document.getElementById('electron');
+                container.appendChild(renderer.domElement);
 
                 const controls = new OrbitControls( camera, renderer.domElement );
                 camera.position.z = 15;
@@ -227,7 +312,7 @@
                 function updateArrowHelper() {
                     dir.x = computeX(4, phi, theta);
                     dir.y = computeY(4, phi, theta);
-                    dir.z = computeZ(4, phi);
+                    dir.z = computeZ(4, theta);
                     // Debugging:
                     // console.log(dir);
                     arrowHelper.setDirection(dir.normalize());
