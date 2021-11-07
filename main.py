@@ -1,6 +1,7 @@
 import numpy as np
 import networkx as nx
 import json
+import js
 from itertools import chain
 from js import input_fixed
 
@@ -111,4 +112,6 @@ def build_json(spinor=(1,0)):
     print(json_string)
     return json_string
 
-json_string = build_json()
+theta = float(js.document.querySelector("#theta-selector").children[1].value) * np.pi
+phi = float(js.document.querySelector("#phi-selector").children[1].value) * np.pi
+json_string = build_json(spinor(theta, phi))
