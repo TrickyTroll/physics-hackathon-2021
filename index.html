@@ -56,9 +56,8 @@
             </script>
             <script>
                 x=document.querySelector("#toto")
-                x.addEventListener("click", async ()=>{await main()})
-            </script>
-            <script>
+                x.addEventListener("click", async ()=>{main()})
+
                 function main(){
                         let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
                         // Pyodide is now ready to use...
