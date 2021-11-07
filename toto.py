@@ -1,4 +1,7 @@
 from js import input_fixed
+import json
+
+
 input = input_fixed
 __builtins__.input = input_fixed
 

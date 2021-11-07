@@ -32,6 +32,7 @@
         </div>     
 
             <p class="subtitle">Results</p>
+            <button id="toto" style="background-color: black;"></button>
 
             <div class="results-form" style="padding: 20px ">
 
@@ -102,15 +103,107 @@
                 </svg>
             </div>
 
-            <div id="digraph"></div>
+            <div id="digraph">
+                <svg width="960" height="600"></svg>
+            </div>
+            
 
             <script src="https://d3js.org/d3.v7.min.js"></script>
-            <!--- https://ipython-books.github.io/64-visualizing-a-networkx-graph-in-the-notebook-with-d3js/ --->
             <script>
+                var svg = d3.select("svg"),
+                    width = +svg.attr("width"),
+                    height = +svg.attr("height");
+                
+                var color = d3.scaleOrdinal(d3.schemeAccent);
+                
+                var simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+                    .force("charge", d3.forceManyBody())
+                    .force("center", d3.forceCenter(width / 2, height / 2));
+
+                d3.json("miserables.json").then(function(error, graph) {
+                  if (error) throw error;
+                
+                  var link = svg.append("g")
+                      .attr("class", "links")
+                    .selectAll("line")
+                    .data(graph.links)
+                    .enter().append("line")
+                      .attr("stroke-width", function(d) { return Math.sqrt(d.value); });
+                
+                  var node = svg.append("g")
+                      .attr("class", "nodes")
+                    .selectAll("g")
+                    .data(graph.nodes)
+                    .enter().append("g")
+                
+                  var circles = node.append("circle")
+                    .attr("r", 5)
+                    .attr("fill", function(d) { return color(d.group); });
+                
+                  // Create a drag handler and append it to the node object instead
+                  var drag_handler = d3.drag()
+                      .on("start", dragstarted)
+                      .on("drag", dragged)
+                      .on("end", dragended);
+                
+                  drag_handler(node);
+                  
+                  var lables = node.append("text")
+                      .text(function(d) {
+                        return d.id;
+                      })
+                      .attr('x', 6)
+                      .attr('y', 3);
+                
+                  node.append("title")
+                      .text(function(d) { return d.id; });
+                
+                  simulation
+                      .nodes(graph.nodes)
+                      .on("tick", ticked);
+                
+                  simulation.force("link")
+                      .links(graph.links);
+                
+                  function ticked() {
+                    link
+                        .attr("x1", function(d) { return d.source.x; })
+                        .attr("y1", function(d) { return d.source.y; })
+                        .attr("x2", function(d) { return d.target.x; })
+                        .attr("y2", function(d) { return d.target.y; });
+                
+                    node
+                        .attr("transform", function(d) {
+                          return "translate(" + d.x + "," + d.y + ")";
+                        })
+                  }
+                });
+                
+                function dragstarted(d) {
+                  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+                  d.fx = d.x;
+                  d.fy = d.y;
+                }
+                
+                function dragged(d) {
+                  d.fx = d3.event.x;
+                  d.fy = d3.event.y;
+                }
+                
+                function dragended(d) {
+                  if (!d3.event.active) simulation.alphaTarget(0);
+                  d.fx = null;
+                  d.fy = null;
+                }
+                
+            </script>
+            <!--- https://ipython-books.github.io/64-visualizing-a-networkx-graph-in-the-notebook-with-d3js/ --->
+            <!--- <script>
                 var width = 300, height = 300;
 
                 // We create a color scale.
-                var color = d3.scaleOrdinal(d3.schemeCategory10).range();
+                //var color = d3.scaleOrdinal(d3.schemeCategory10).range();
 
                 // We create a force-directed dynamic graph layout.
                 var force = d3.forceSimulation()
@@ -128,15 +221,15 @@
                 }
 
                 // We load the JSON file.
-                d3.json("graph.json", function(error, graph) {
+                d3.json("graph.json").then(function(graph){ 
                     // In this block, the file has been loaded
                     // and the 'graph' object contains our graph.
 
                     // We load the nodes and links in the
                     // force-directed graph.
                     force.nodes(graph.nodes)
-                        .links(graph.links)
-                        .start();
+                         //.links(graph.links)
+                         .on();
 
                     // We create a <line> SVG element for each link
                     // in the graph.
@@ -148,15 +241,12 @@
                     // We create a <circle> SVG element for each node
                     // in the graph, and we specify a few attributes.
                     var node = svg.selectAll(".node")
-                                .data(graph.nodes)
-                                .enter().append("circle")
-                                .attr("class", "node")
-                                .attr("r", 5)  // radius
-                                .style("fill", function(d) {
-                                        // The node color depends on the club.
-                                        return color(d.club);
-                                    })
-                                .call(force.drag);
+                                  .data(graph.nodes)
+                                  .enter().append("circle")
+                                  .attr("class", "node")
+                                  .attr("r", 5)  // radius
+                                  .style("fill", "red")
+                                  .call(force.drag);
 
                     // The name of each node is the node number.
                     node.append("title")
@@ -173,8 +263,12 @@
 
                     node.attr("cx", function(d){return d.x})
                         .attr("cy", function(d){return d.y});
-                })})
-            </script>
+
+                    console.log("Je me suis rendu jusqu'ici");
+                });
+                });
+
+            </script> --->
 
             <script src="js/utils.js"></script> 
             <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
@@ -194,7 +288,8 @@
                         .then(data => pythonScript = data);
                     console.log(await pyodide.runPython(pythonScript));
                 }
-                main();
+                x=document.querySelector("#toto")
+                x.addEventListener("click", async ()=>{await main()})
             </script>
             <!-- Animation -->
             <script>
