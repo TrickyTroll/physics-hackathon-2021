@@ -59,7 +59,7 @@
                 x.addEventListener("click", async ()=>{await main()})
             </script>
             <script>
-                async function main(){
+                function main(){
                         let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
                         // Pyodide is now ready to use...
                         let pythonScript = ""
@@ -67,12 +67,12 @@
                             .then(response => response.text())
                             .then(data => pythonScript = data);
                         //console.log(await pyodide.runPythonAsync(pythonScript));
-                        pyodide.loadPackage(['numpy', 'networkx']).then(() => {
-                            pyodide.runPython(pythonScript);
-                            var jsonFile = pyodide.globals.get("json_string");
-                        }).then(()=>{
-                            console.log(jsonFile)
-                            display_graph(jsonFile)})
+                        await pyodide.loadPackage(['numpy', 'networkx']);
+                        await pyodide.runPython(pythonScript);
+                        let jsonFile = pyodide.globals.get("json_string");
+                        console.log(jsonFile);
+
+                        await display_graph(jsonFile);
                 }
             </script>
             <!-- Animation -->
