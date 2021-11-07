@@ -103,11 +103,15 @@ def build_json(spinor=(1,0)):
     dico_probability = local_computation(spinor, 1, G, dico_orientation)
     data = dico_orientation + dico_probability
     for n in G:
-        G.nodes[n]["display"] = str(data[n])
         if isinstance(data[n], tuple):
-            G.nodes[n]["type"] = "A"
+            G.nodes[n]["display"] = str(tuple([f"{x:.3f}" for x in data[n]]))
+            G.nodes[n]["type"] = 0
         elif isinstance(data[n], float):
-            G.nodes[n]["type"] = "D"
+            if data[n] < 1e-5:
+                data[n] = 0 # zero probability
+            x = data[n]
+            G.nodes[n]["display"] = str(f"{x:.3f}") # truncate
+            G.nodes[n]["type"] = 1
     # write json formatted data
     d = nx.json_graph.node_link_data(G)  # node-link format to serialize
     # write json

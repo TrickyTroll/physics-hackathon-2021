@@ -11,9 +11,14 @@ function display_graph(jsonString){
             return d.id;
         }))
         .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(width / 2, height / 2));
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force('collide', d3.forceCollide(function(d){
+            return d.id === "j" ? 100 : 50
+        }));
 
         var graph = JSON.parse(jsonString);
+
+        var color =  d3.scaleLinear().domain([0,1]).range(["white", "blue"]);
 
         var link = svg.append("g")
             .attr("class", "links")
@@ -26,7 +31,9 @@ function display_graph(jsonString){
             .selectAll("circle")
             .data(graph.nodes)
             .enter().append("circle")
-            .attr("r", 5)
+            .attr("r", 20)
+            .style("fill", function(d) { return color(d.type); })
+            //.style("fill", "red")
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -34,7 +41,7 @@ function display_graph(jsonString){
 
         node.append("title")
             .text(function (d) {
-                return d.id;
+                return d.display;
             });
 
         simulation
