@@ -57,6 +57,7 @@
             <script>
                 let pyodide = "";
                 let pythonScript = "";
+                let canPress = false;
 
                 async function main(){
                     pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
@@ -66,6 +67,7 @@
                         .then(data => pythonScript = data);
                     //console.log(await pyodide.runPythonAsync(pythonScript));
                     await pyodide.loadPackage(['numpy', 'networkx']);
+                    canPress = true;
                 }
 
                 // blocking call
@@ -75,14 +77,19 @@
 
                 async function buildGraph() {
                     // pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
-                    await pyodide.runPython(pythonScript);
-                    let jsonFile = pyodide.globals.get("json_string");
-                    console.log(jsonFile);
-                    await display_graph(jsonFile);
+                    if (canPress) {
+                        await pyodide.runPython(pythonScript);
+                        let jsonFile = pyodide.globals.get("json_string");
+                        let theta = pyodide.globals.get("theta");
+                        console.log(jsonFile);
+                        console.log(theta);
+                        await display_graph(jsonFile);
+                    }
                 }
 
-                x=document.querySelector("#toto")
-                x.addEventListener("click", async ()=>{await buildGraph()})
+                x=document.querySelector("#toto");
+                x.addEventListener("click", async ()=>{await buildGraph()});
+
             </script>
             <!-- Animation -->
             <script>
