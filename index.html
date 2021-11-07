@@ -60,24 +60,41 @@
                 };
             </script>
             <script>
-                x=document.querySelector("#toto")
-                x.addEventListener("click", async ()=>{await main()})
+                let pyodide = "";
+                let pythonScript = "";
+                let canPress = false;
 
                 async function main(){
-                        let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
-                        // Pyodide is now ready to use...
-                        let pythonScript = "";
-                        await fetch('main.py')
-                            .then(response => response.text())
-                            .then(data => pythonScript = data);
-                        //console.log(await pyodide.runPythonAsync(pythonScript));
-                        await pyodide.loadPackage(['numpy', 'networkx']);
+                    pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+                    // Pyodide is now ready to use...
+                    await fetch('main.py')
+                        .then(response => response.text())
+                        .then(data => pythonScript = data);
+                    //console.log(await pyodide.runPythonAsync(pythonScript));
+                    await pyodide.loadPackage(['numpy', 'networkx']);
+                    canPress = true;
+                }
+
+                // blocking call
+                window.onload = async function () {
+                    await main();
+                };
+
+                async function buildGraph() {
+                    // pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+                    if (canPress) {
                         await pyodide.runPython(pythonScript);
                         let jsonFile = pyodide.globals.get("json_string");
+                        let theta = pyodide.globals.get("theta");
                         console.log(jsonFile);
-
+                        console.log(theta);
                         await display_graph(jsonFile);
+                    }
                 }
+
+                x=document.querySelector("#toto");
+                x.addEventListener("click", async ()=>{await buildGraph()});
+
             </script>
             <!-- Animation -->
             <script>
