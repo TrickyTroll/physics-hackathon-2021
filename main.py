@@ -44,14 +44,18 @@ def graph(recursive_depth=0, binary_label=""):
     G = nx.DiGraph()
     dico = dict_add({})
     print(f"current position in tree: {recursive_depth}{binary_label}")
-    component = input("Component to add: ")
+    component = input("Component to add (A or D): ")
 
     node_id = f"{recursive_depth}{binary_label}"
 
     if component == "A":
-        theta = float(input("theta (as a fraction of pi): "))*np.pi
-        phi = float(input("phi (as a fraction of pi): "))*np.pi
-        orientation = (theta, phi)
+        component_to_angles = {"X":(np.pi/2, 0), "Y":(np.pi/2, np.pi/2), "Z":(0, np.pi)}
+        orientation = input("Analyzer orientation (X, Y, Z or angles): ")
+        if orientation in ("X", "Y", "Z"):
+            orientation = component_to_angles[orientation]
+        else:
+            liste = orientation.split()
+            orientation = (float(liste[0]), float(liste[1]))
         recursive_depth_next = recursive_depth + 1
 
         G.add_node(node_id)
@@ -93,7 +97,6 @@ def local_computation(spinor, P_in, G, dico_orientation, node_id="0"):
             dico_probability += local_computation(*output["down"], G, dico_orientation, node_id)
 
     return dico_probability
-
 
 def build_json(spinor=(1,0)):
     G, dico_orientation = graph()
