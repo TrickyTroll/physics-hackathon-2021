@@ -45,7 +45,7 @@
                 <svg width="960" height="600"></svg>
             </div>
             
-            <script type="text/javascript" src="force/force.js"></script>
+            <script type="text/javascript" src="force/force_display.js"></script>
             <script src="js/utils.js"></script> 
             <script src="https://cdn.jsdelivr.net/pyodide/v0.18.1/full/pyodide.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -56,22 +56,23 @@
             </script>
             <script>
                 x=document.querySelector("#toto")
-                x.addEventListener("click", async ()=>{await combine()})
-
-                async function combine(){
-                    await main()
-                    display_graph()
-                }
+                x.addEventListener("click", async ()=>{await main()})
             </script>
             <script>
                 async function main(){
-                    let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
-                    // Pyodide is now ready to use...
-                    let pythonScript = ""
-                    await fetch('toto.py')
-                        .then(response => response.text())
-                        .then(data => pythonScript = data);
-                    console.log(await pyodide.runPython(pythonScript));
+                        let pyodide = await loadPyodide({ indexURL : "https://cdn.jsdelivr.net/pyodide/v0.18.1/full/" });
+                        // Pyodide is now ready to use...
+                        let pythonScript = ""
+                        await fetch('main.py')
+                            .then(response => response.text())
+                            .then(data => pythonScript = data);
+                        //console.log(await pyodide.runPythonAsync(pythonScript));
+                        pyodide.loadPackage(['numpy', 'networkx']).then(() => {
+                            pyodide.runPython(pythonScript);
+                            var jsonFile = pyodide.globals.get("json_string");
+                        }).then(()=>{
+                            console.log(jsonFile)
+                            display_graph(jsonFile)})
                 }
             </script>
             <!-- Animation -->
